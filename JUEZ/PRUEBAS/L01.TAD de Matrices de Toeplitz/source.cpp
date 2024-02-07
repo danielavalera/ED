@@ -27,30 +27,35 @@ class ToeplitzMatrix {
 	int n, m, v, posVector;
 	vector<int> matriz;
 
+	int calculaDiagonal(int i, int j) {
+		return j - i + (n - 1);
+	}
+
 public:
-	class ToeplitzMatrix (int n, int m, int v){
+	ToeplitzMatrix (int n, int m, int v){
 		this->n = n;
 		this->m = m;
 		this->v = v;
 		posVector = 0;
-		int tamVector = (n + m) - 1;
-		matriz.resize(tamVector, v);
+		for (int i = 0; i < n + m; i++) {   //Coste O(n + m), donde n corresponde al número de filas de la matriz y m al número de columnas 
+			matriz.push_back(v);
+		}
 	}
 	
-	int get(int i, int j) {
+	//Operaciones de asignacion
+	int get(int i, int j) { // Coste constante: O(1) ya que accedemos sólo al valor de la posición que queremos
 		if(i >= 0 && i < n && j >= 0 && j < m) {
-			posVector = j - i + (n - 1); 
+			posVector = calculaDiagonal(i,j); 
 			return matriz[posVector];
 		}
 	}
 	
-	void set(int i, int j, int valor) {
+	void set(int i, int j, int valor) { // Coste constante: O(1) ya que accedemos sólo a la posición que queremos
 		if(i >= 0 && i < n && j >= 0 && j < m) {
-			posVector = j - i + (n - 1);
+			posVector = calculaDiagonal(i, j);
 			matriz[posVector] = valor;
 		}
 	}
-	
 };
 // No te olvides de indicar y justificar el coste del constructor y el coste de cada método.
 
