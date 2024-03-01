@@ -22,8 +22,8 @@
   /*
     Indica el nombre y apellidos de los componentes del grupo
     ---------------------------------------------------------
-    Componente 1:
-    Componente 2:
+    Componente 1: Sánchez Guerra, Sara
+    Componente 2: Valera Fuentes, Daniela
   */
   //@ </answer>
 
@@ -70,42 +70,49 @@ using namespace std;
 
 // Añade los tipos de datos auxiliares y funciones que necesites
 
-int personasPendientes(deque<char>& exs, queue<char>& conds, int t) {
-    int countPerPendientes = 0;
+int personasPendientes(const deque<char>& exs, queue<char>& conds, int m, int t) {
+    vector<int> repetidos(m, 0); // vector para llevar el recuento de suspensos por conductor
 
-    for (int i = 0; i < t; i++) //según los días (t)
-    {
-        while (!exs.empty()) {
-            char exAux = exs.front();
+    for (int dia = 0; dia < t; dia++) {
+        for (size_t hora = 0; hora < exs.size(); hora++){
             char condAux = conds.front();
-            exs.pop_front();
+            int indexRepetidos = hora % m;
 
-            if (exAux == 'A') {
+            if (exs[hora] == 'A') {
                 if (condAux == 'M') {
                     conds.pop();
                     conds.push(condAux);
+                    repetidos[indexRepetidos]++;
                 }
                 else {
                     conds.pop();
                 }
-
             }
-            /*else if (exAux == 'B') {
-
-            }*/
+            else if (exs[hora] == 'B') {
+                if (repetidos[indexRepetidos] < 2) {
+                    if (condAux == 'M') {
+                        conds.pop();
+                        conds.push(condAux);
+                        repetidos[indexRepetidos]++;
+                    }
+                    else {
+                        conds.pop();
+                    }
+                }
+                else {
+                    conds.pop();
+                }
+            }
             else {
                 conds.pop();
                 conds.push(condAux);
+                repetidos[indexRepetidos]++;
             }
         }
+        
     }
 
-    /*while (!conds.empty()) {
-        countPerPendientes++;
-        conds.pop();
-    }*/
-
-    return countPerPendientes;
+    return conds.size();
 }
 
 // Implementa aquí la función para tratar UN caso de prueba. La función
@@ -119,14 +126,13 @@ bool tratar_caso() {
 
     if (!cin) return false;
 
-    char examinador, conductor;
-    deque<char> examinadores; //porq nos interesa iterar siempre en la misma lista
+    char conductor;
+    deque<char> examinadores(n); //porq nos interesa iterar siempre en la misma lista
     queue<char> conductores;
 
     for (int i = 0; i < n; i++)
     {
-        cin >> examinador;
-        examinadores.push_back(examinador);
+        cin >> examinadores[i];
     }
 
     for (int i = 0; i < m; i++)
@@ -135,7 +141,7 @@ bool tratar_caso() {
         conductores.push(conductor);
     }
 
-    cout << personasPendientes(examinadores, conductores, t) << "\n";
+    cout << personasPendientes(examinadores, conductores, m, t) << "\n";
 
     return true;
 }
