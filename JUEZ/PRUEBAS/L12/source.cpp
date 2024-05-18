@@ -22,8 +22,8 @@
   /*
     Indica el nombre y apellidos de los componentes del grupo
     ---------------------------------------------------------
-    Componente 1:
-    Componente 2:
+    Componente 1: Sara Sánchez Guerra
+    Componente 2: Daniela Valentina Valera Fuentes
   */
   //@ </answer>
 
@@ -38,6 +38,7 @@
 #include <set>
 #include <unordered_map>
 #include <unordered_set>
+#include <list>
 using namespace std;
 
 // Tipo para representar una posición en la cuadrícula mediante un par de
@@ -85,12 +86,6 @@ istream& operator>>(istream& in, Direccion& d) {
     return in;
 }
 
-bool operator<(const pair<string, int>& a, const pair<string, int>& b) {
-    if (a.second != b.second) {
-        // Si las puntuaciones son diferentes, ordenamos en función de la puntuación
-        return a.second > b.second;
-    }
-}
 
 // Tipo de datos enumerado para representar elementos del tablero
 enum class Elemento { Manzana, Serpiente, Nada };
@@ -112,7 +107,6 @@ ostream& operator<<(ostream& out, const Elemento& e) {
 // Modificar a partir de aquí
 //--------------------------------------------------------------------------
 //@ <answer>
-
 // TAD para el juego de la serpiente. Implementa cada una de las operaciones,
 // y justifica su coste.
 class JuegoSerpiente {
@@ -131,9 +125,10 @@ public:
             throw domain_error("Posicion ocupada");
         }
 
-        // Creamos la nueva serpiente, que únicamente contiene su cabeza
+        // Creamos la nueva serpiente, que únicamente contiene su cabeza y la insertamos en la lista de puntuaciones
         queue<Posicion> q; q.push(posicion);
-        serpientes.insert({ nombre, {posicion, 0, 0, q} });
+        puntuaciones[0].push_front(nombre);
+        serpientes.insert({ nombre, {posicion, 0, 0, q, puntuaciones.at(0).begin()} });
         // La posición pasa a estar ocupada
         ocupadas.insert(posicion);
     }
@@ -172,20 +167,23 @@ public:
         }
     }
 
-    
-
     vector<pair<string, int>> mejores_puntuaciones(int num) const {
         vector<pair<string, int>> ranking;
-        
-        auto it = serpientes.begin();
-        for (int i = 0; i < num && it != serpientes.end(); ++i, ++it) {
-            ranking.push_back({ it->first, it->second.puntuacion });
+        int count = 0;
+
+        for (const auto& valor : puntuaciones) {
+            const auto& lista = valor.second;
+            auto it = lista.rbegin(); // iterador al último elemento de la lista
+            while (it != lista.rend() && count < num) {
+                ranking.push_back({ *it, valor.first });
+                ++it;
+                ++count;
+            }
         }
-        sort(ranking.begin(), ranking.end());
 
         return ranking;
     }
-   
+
 
 private:
 
@@ -194,11 +192,13 @@ private:
     //  - Su puntuación
     //  - El temporizador de crecimiento
     //  - Una cola que contiene todas las casillas que ocupa el cuerpo de la serpiente
+    //  - Un iterador al map de puntuaciones
     struct Serpiente {
         Posicion cabeza;
         int puntuacion;
         int temp_crecimiento;
         queue<Posicion> cuerpo;
+        list<string>::iterator it_serpiente;
     };
 
     // Para cada manzana almacenamos:
@@ -216,6 +216,8 @@ private:
     // Conjunto que indica las posiciones que están ocupadas por
     // serpientes
     unordered_set<Posicion> ocupadas;
+    // Diccionario donde cada key corresponde con las puntuaciones de las serpientes y el valor es una lista de las serpientes que tienen esa puntuación
+    map<int, list<string>, greater<int>> puntuaciones;
 
     // Dada una dirección como punto cardinal (N, S, E, O), devuelve un vector
     // unitario que apunta en esa dirección.
@@ -286,8 +288,11 @@ private:
                 ocupadas.erase(s.cuerpo.front());
                 s.cuerpo.pop();
             }
+            // Eliminamos la serpiente de la lista de puntuaciones
+            puntuaciones[s.puntuacion].erase(s.it_serpiente);
             // Borramos la serpiente del diccionario.
             serpientes.erase(nombre);
+
             return true;
         }
         else {
@@ -302,8 +307,16 @@ private:
             if (manzanas.count(sig)) {
                 Manzana m = manzanas.at(sig);
                 manzanas.erase(sig);
+                int puntos_antes = s.puntuacion;
                 s.puntuacion += m.puntuacion;
                 s.temp_crecimiento += m.crecimiento;
+                // Actualizamos la lista de puntuaciones y el iterador de la serpiente 
+                if (puntos_antes != s.puntuacion) {
+                    list<string>& lista_antes = puntuaciones[puntos_antes];
+                    lista_antes.erase(s.it_serpiente);
+                    puntuaciones[s.puntuacion].push_front(nombre);
+                    s.it_serpiente = puntuaciones[s.puntuacion].begin();
+                }
             }
             return false;
         }

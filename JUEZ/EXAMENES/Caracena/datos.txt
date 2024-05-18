@@ -1,0 +1,28 @@
+nueva_mesa 1
+nuevo_pedido 1 bravas
+nueva_mesa 7
+nuevo_pedido 7 gazpacho
+nuevo_pedido 7 croquetas
+servir
+servir
+que_falta 7
+que_falta 1
+nuevo_pedido 7 ensalada
+nuevo_pedido 7 croquetas
+que_falta 7
+cancelar_pedido 7 croquetas
+que_falta 7
+cancelar_pedido 7 croquetas
+que_falta 7
+servir
+servir
+FIN
+nueva_mesa 1
+nueva_mesa 1
+nuevo_pedido 2 croquetas
+nuevo_pedido 1 croquetas
+cancelar_pedido 1 bravas
+servir
+servir
+cancelar_pedido 1 croquetas
+FIN
