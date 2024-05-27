@@ -9,6 +9,7 @@
 #include <list>
 #include <iterator>
 #include <unordered_map>
+#include <algorithm>
 
 using namespace std;
 
@@ -60,15 +61,11 @@ public:
         }
         else { //si existe, cambia de profesor
             string profesor_anterior = alumnos[alumno].profesor;
-            //auto i = profesores.find(profesor);
-            //if (!profesores.count(profesor)) {//profesor no existía
                     alumnos[alumno].profesor = profesor;
                     //actualizar la lista de alumnos del profesor antiguo
                     profesores[profesor_anterior][it->second.puntuacion].remove(alumno);
                     //darlo de alta en el nuevo profesor
                     profesores[profesor][it->second.puntuacion].push_back(alumno);
-                
-            //}
         }
     }
 
@@ -114,6 +111,8 @@ public:
                 result.insert(result.end(), it->second.begin(), it->second.end());
             }
         }
+
+        sort(result.begin(), result.end());
         return result;
     }
 
@@ -186,7 +185,7 @@ bool tratar_caso() {
             }
         }
         catch (exception& e) {
-            cout << "ERROR: " << e.what() << "\n";
+            cout << "ERROR" <<"\n";
         }
 
         cin >> operacion;
