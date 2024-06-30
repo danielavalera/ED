@@ -40,40 +40,30 @@ ostream& operator<<(ostream& out, const Plato& plato) {
 
 // Indica el coste en función del tamaño del parámetro de entrada
 void ordenar_menu(list<Plato>& platos) {
+    auto it2 = platos.begin();
     auto it = platos.begin();
-    
-    while (it != platos.end()) {
-        auto it2 = ++platos.begin(); //está regu, igual tengo que actualizar los punteros en cada caso
-        Plato plato; 
-        if (it->categoria != Categoria::Primero) {
-            if (it->categoria == Categoria::Segundo) {
-                if (it2->categoria == Categoria::Primero) {
-                    plato.categoria = it2->categoria;
-                    plato.nombre = it2->nombre;
-                    *it2 = *it;
-                    it->categoria = plato.categoria;
-                    it->nombre = plato.nombre;
-                }
-                else if (it2->categoria == Categoria::Postre) {
-                    auto it3 = --platos.end();
-                    //tengo que echarle un vistazo, y creo que general, porque no estoy controlando el orden en el que entran
-                }
-                else {
-                    it++;
-                }
-            }
-            else {
-                it2 = --platos.end();
-                plato.categoria = it2->categoria;
-                plato.nombre = it2->nombre;
-                *it2 = *it;
-                it->categoria = plato.categoria;
-                it->nombre = plato.nombre;
-            }
+    for (int i = 0; i < platos.size(); i++)
+    {
+        if ((*it).categoria == Categoria::Primero)
+        {
+            it2 = platos.insert(it2, *it); // Avanzas it2 al ultimo primer plato
+            it = platos.erase(it); // Borras el plato reordenado
+
+            if (it2 != platos.end()) 
+                it2++;
+            
         }
-        else {
-            it++;
+        else if ((*it).categoria == Categoria::Postre && it != platos.end())
+        {
+            platos.insert(platos.end(), *it);
+
+            if (it == it2 && it != platos.end()) {
+                it2++; // Por si el postre estaba entre los primeros platos
+            }
+            it = platos.erase(it); // Borramos el ultimo plato reordenado
         }
+        else it++;
+
     }
 }
 
@@ -83,7 +73,7 @@ bool tratar_caso() {
     // Devuelve false si ya no hay más casos de prueba que leer,
     // true en caso contrario.
     int n; cin >> n;
-    
+
     if (n == 0) return false;
 
     char c;
@@ -110,10 +100,10 @@ bool tratar_caso() {
 
         platos.push_back(plato);
     }
-    
+
     ordenar_menu(platos);
 
-    for (const auto & pl: platos)
+    for (const auto& pl : platos)
     {
         cout << pl << "\n";
     }

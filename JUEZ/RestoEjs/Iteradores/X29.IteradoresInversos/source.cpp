@@ -144,11 +144,11 @@ public:
 
 
     reverse_iterator rbegin() {
-        // Completar
+        return reverse_iterator(head, head->prev);
     }
 
     reverse_iterator rend() {
-        // Completar
+        return reverse_iterator(head, head);
     }
 
 
@@ -193,7 +193,33 @@ private:
     };
 
     class reverse_iterator {
-        // Completar
+    public:
+        reverse_iterator& operator++() {
+            assert(current != head);
+            current = current->prev;
+            return *this;
+        }
+        reverse_iterator& operator++(int) {
+            assert(current != head);
+            reverse_iterator antes = *this;
+            current = current->prev;
+            return antes;
+        }
+        T& operator*() {
+            assert(current != head);
+            return current->value;
+        }
+        bool operator==(const reverse_iterator& other) {
+            return other.head == head && other.current == current;
+        }
+        bool operator!=(const reverse_iterator& other) {
+            return !(*this == other);
+        }
+    private:
+        reverse_iterator(Node* head, Node* init) : head(head), current(init) { }
+        Node* head;
+        Node* current;
+        friend class ListLinkedDouble;
     };
 
     Node* nth_node(int n) const;
@@ -264,6 +290,20 @@ using namespace std;
 
 void tratar_caso() {
     // Introduce aquí el código para tratar un caso de prueba.
+    int n; cin >> n;
+    ListLinkedDouble<int> l;
+    while (n != 0) {
+        l.push_back(n);
+        cin >> n;
+    }
+
+    if (!l.empty()) {
+        for (auto it = l.rbegin(); it != l.rend(); ++it) {
+            cout << *it << " ";
+        }
+    }
+    cout << "\n";
+    
 }
 
 int main() {
