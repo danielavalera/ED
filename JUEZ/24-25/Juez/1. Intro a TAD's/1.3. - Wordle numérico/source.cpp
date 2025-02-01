@@ -140,7 +140,7 @@ bool tratar_caso() {
         cin >> intento[i];
 
     procesarCaso(M, secuencia, intento);
-
+    
     return true;
 }
 

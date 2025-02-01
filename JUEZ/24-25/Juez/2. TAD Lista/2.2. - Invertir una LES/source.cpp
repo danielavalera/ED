@@ -248,7 +248,6 @@ void resuelveCaso() {
     xs.reverse();
     xs.display();
     cout << "\n";
-
 }
 
 int main() {

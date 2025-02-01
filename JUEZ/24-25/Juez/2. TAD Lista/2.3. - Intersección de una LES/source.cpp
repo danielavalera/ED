@@ -9,7 +9,7 @@ private:
         int value;
         Node* next;
     };
-
+    
 public:
     ListLinkedSingle() : head(nullptr) {}
     ListLinkedSingle(vector<int> v) {
