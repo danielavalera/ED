@@ -39,7 +39,8 @@ public:
     }
 
     void duplicate();
-    void intersect(const ListLinkedSingle& other);
+    void reverse();
+    //void intersect(const ListLinkedSingle& other);
 
     void push_front(const int& elem) {
         Node* new_node = new Node;
@@ -220,71 +221,31 @@ void ListLinkedSingle::duplicate() {
     }
 }
 
-void ListLinkedSingle::intersect(const ListLinkedSingle& other) {
+void ListLinkedSingle::reverse() {
     Node* cur = this->head;
-    Node* curOther = other.head;
-    Node* prev = nullptr; //Apunta al último nodo añadido a la lista resultante
+    Node* prev = nullptr;
 
-    while (cur != nullptr && curOther != nullptr) {
-        //Ninguna de las dos listas las hemos recorrido completamente
-        if (cur->value == curOther->value) { //cur está en la intersección
-            prev = cur;
-            cur = cur->next;
-            curOther = curOther->next;
-        }
-        else if (cur->value > curOther->value) {
-            curOther = curOther->next;
-        }
-        else {//cur->value < curOther-> value
-            Node* sig = cur->next;
-            if (prev == nullptr) { //todavía no hemos añadido nada definitivo a la lista
-                head = cur->next;
-                delete cur;
-                cur = head;
-            }
-            else { //prev !== nullptr
-                prev->next = cur->next;
-                delete cur;
-                cur = prev->next;
-            }
-        }
-
-
-    }
-    // cur == nullptr || curOther == nullptr
     while (cur != nullptr) {
         Node* sig = cur->next;
-        delete cur;
+        cur->next = prev;
+        prev = cur;
         cur = sig;
     }
-
-    if (prev == nullptr) {
-        head = nullptr;
-    }
-    else { //prev != nullptr
-        prev->next = nullptr;
-    }
+    this->head = prev;
 }
+
 // resuelve un caso de prueba, leyendo de la entrada la
 // configuración, y escribiendo la respuesta
 void resuelveCaso() {
-
     // leer los datos de la entrada
-    int N, M, elem; cin >> N;
     ListLinkedSingle xs;
-    ListLinkedSingle zs;
-
-    for (int i = 0; i < N; i++) {
-        cin >> elem;
+    int elem; cin >> elem;
+    while (elem != 0) {
         xs.push_back(elem);
-    }
-    cin >> M;
-    for (int i = 0; i < M; i++) {
         cin >> elem;
-        zs.push_back(elem);
     }
 
-    xs.intersect(zs);
+    xs.reverse();
     xs.display();
     cout << "\n";
 
@@ -292,7 +253,7 @@ void resuelveCaso() {
 
 int main() {
 #ifndef DOMJUDGE
-    std::ifstream in("datos.txt");
+    std::ifstream in("2.2.txt");
     auto cinbuf = std::cin.rdbuf(in.rdbuf());
 #endif
     // La entrada comienza con el número de casos de prueba.
@@ -309,6 +270,3 @@ int main() {
 
     return 0;
 }
-
-
-
