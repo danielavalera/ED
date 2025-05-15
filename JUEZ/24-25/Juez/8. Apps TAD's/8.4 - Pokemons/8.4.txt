@@ -1,0 +1,32 @@
+capturar_pokemon e1 p1 10
+capturar_pokemon e1 p2 20
+capturar_pokemon e1 p3 5
+capturar_pokemon e2 p1 30
+capturar_pokemon e2 p4 7
+dia_de_liberacion p1
+vencer_pokemon e1 15
+gimnasio e1
+gimnasio e2
+dia_de_liberacion p5
+vencer_pokemon e1 5
+vencer_pokemon e1 8
+capturar_pokemon e2 p6 1
+capturar_pokemon e2 p3 5
+capturar_pokemon e1 p5 30
+capturar_pokemon e1 p6 1
+dia_de_liberacion p3
+dia_de_liberacion p6
+gimnasio e1
+gimnasio e1
+gimnasio e2
+FIN
+capturar_pokemon e1 p1 10
+capturar_pokemon e2 p1 10
+capturar_pokemon e1 p1 15
+capturar_pokemon e2 p2 10
+gimnasio e3
+vencer_pokemon e3 4
+gimnasio e3
+dia_de_liberacion p1
+vencer_pokemon e1 1
+FIN
