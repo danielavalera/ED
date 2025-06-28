@@ -219,7 +219,9 @@ void ListLinkedDouble::swap2by2() {
 
     Node* curr = head->next;
 
-    while (curr != head->prev->prev && curr != head->prev) {
+    // curr = head->prev->prev      -> penúltimo nodo    
+    // curr = head->prev            -> último nodo
+    while (curr != head->prev->prev && curr != head->prev) { //mientras no estemos en el penúltimo y en el último nodo
         detach(curr);
         attach(curr, curr->next->next);
         curr = curr->next;
